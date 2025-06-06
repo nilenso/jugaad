@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 data class JugaadConfigurationState(
-    val serverUrl: String = "",
-    val authToken: String = "",
+    val slackWebhookUrl: String = "",
     val smsMatchString: String = "",
     val jugaadEnabled: Boolean = false
 )

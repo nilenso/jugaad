@@ -1,10 +1,17 @@
 package com.nilenso.jugaad.worker
 
 import android.content.Context
+import android.util.Log
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.nilenso.jugaad.api.JugaadSendRequest
 import com.nilenso.jugaad.api.JugaadWebService
+import com.nilenso.jugaad.datastore.dataStore
+import com.nilenso.jugaad.datastore.PreferencesKeys
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,31 +19,46 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class JugaadSendWorker(appCtx: Context, workerParams: WorkerParameters): Worker(appCtx, workerParams) {
+    
     override fun doWork(): Result {
+
+        val message = inputData.getString("JUGAAD_MSG") ?: return Result.failure()
+        
+        val webhookUrl = runBlocking {
+            applicationContext.dataStore.data.first()[PreferencesKeys.SLACK_WEBHOOK_URL]
+        } ?: return Result.failure()
+
+        Log.d("JUGAADWORKER", "Starting work to send message: $message")
+        Log.d("JUGAADWORKER", "Using webhook URL: $webhookUrl")
+
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(logging) // <-- this is the important line!
+        httpClient.addInterceptor(logging)
 
-
-        val rfit = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://hooks.slack.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient.build())
-            .baseUrl("http://10.184.57.44:5000")
             .build()
 
-        var svc = rfit.create(JugaadWebService::class.java)
+        val api = retrofit.create(JugaadWebService::class.java)
 
-        val resp = svc.sendMessage(
-            JugaadSendRequest(msg = inputData.getString("JUGAAD_MSG")!!),
-            "Token abc"
-        ).execute()
-
-        if (!resp.isSuccessful) {
+        try {
+            val request = JugaadSendRequest(message)
+            val response = api.sendMessage(webhookUrl, request).execute()
+            
+            if (response.isSuccessful) {
+                Log.d("JUGAADWORKER", "Message sent successfully")
+                return Result.success()
+            } else {
+                Log.e("JUGAADWORKER", "Failed to send message: ${response.errorBody()?.string()}")
+                return Result.failure()
+            }
+        } catch (e: Exception) {
+            Log.e("JUGAADWORKER", "Exception while sending message", e)
             return Result.failure()
         }
-
-        return Result.success()
     }
 }

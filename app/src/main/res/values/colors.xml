@@ -7,4 +7,19 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Nilenso Brand Colors -->
+    <color name="nilenso_pink">#FF3D84</color>
+    <color name="nilenso_dark_pink">#E8357B</color>
+    <color name="nilenso_light_pink">#FF5B9B</color>
+    
+    <!-- Modern UI Colors -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="primary_text">#212529</color>
+    <color name="secondary_text">#6C757D</color>
+    <color name="border_color">#E9ECEF</color>
+    <color name="accent_blue">#007BFF</color>
+    <color name="success_green">#28A745</color>
+    <color name="warning_orange">#FFC107</color>
 </resources>

@@ -24,11 +24,23 @@ class JugaadSendWorker(appCtx: Context, workerParams: WorkerParameters): Worker(
 
         val message = inputData.getString("JUGAAD_MSG") ?: return Result.failure()
         
-        val webhookUrl = runBlocking {
-            applicationContext.dataStore.data.first()[PreferencesKeys.SLACK_WEBHOOK_URL]
-        } ?: return Result.failure()
+        val (webhookUrl, deviceName) = runBlocking {
+            val preferences = applicationContext.dataStore.data.first()
+            val url = preferences[PreferencesKeys.SLACK_WEBHOOK_URL]
+            val name = preferences[PreferencesKeys.DEVICE_NAME]?.takeIf { it.isNotBlank() } ?: ""
+            Pair(url, name)
+        }
+        
+        if (webhookUrl == null) return Result.failure()
 
-        Log.d("JUGAADWORKER", "Starting work to send message: $message")
+        // Prefix message with device name if it's configured
+        val finalMessage = if (deviceName.isNotEmpty()) {
+            "$deviceName: $message"
+        } else {
+            message
+        }
+
+        Log.d("JUGAADWORKER", "Starting work to send message: $finalMessage")
         Log.d("JUGAADWORKER", "Using webhook URL: $webhookUrl")
 
         val logging = HttpLoggingInterceptor()
@@ -46,7 +58,7 @@ class JugaadSendWorker(appCtx: Context, workerParams: WorkerParameters): Worker(
         val api = retrofit.create(JugaadWebService::class.java)
 
         try {
-            val request = JugaadSendRequest(message)
+            val request = JugaadSendRequest(finalMessage)
             val response = api.sendMessage(webhookUrl, request).execute()
             
             if (response.isSuccessful) {

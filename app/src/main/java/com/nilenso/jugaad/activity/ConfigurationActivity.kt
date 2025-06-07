@@ -38,6 +38,7 @@ class ConfigurationActivity: AppCompatActivity() {
     
     private lateinit var editTextSlackWebhookUrl: EditText
     private lateinit var editTextSmsMatchString: EditText
+    private lateinit var editTextDeviceName: EditText
     private lateinit var editTextMonitoringWebhookUrl: EditText
     private lateinit var checkBoxEnabled: CheckBox
     private lateinit var buttonSave: Button
@@ -50,6 +51,7 @@ class ConfigurationActivity: AppCompatActivity() {
         // Initialize UI components
         editTextSlackWebhookUrl = findViewById(R.id.editTextSlackWebhookUrl)
         editTextSmsMatchString = findViewById(R.id.editTextSmsMatchString)
+        editTextDeviceName = findViewById(R.id.editTextDeviceName)
         editTextMonitoringWebhookUrl = findViewById(R.id.editTextMonitoringWebhookUrl)
         checkBoxEnabled = findViewById(R.id.checkBoxEnabled)
         buttonSave = findViewById(R.id.buttonSave)
@@ -73,6 +75,7 @@ class ConfigurationActivity: AppCompatActivity() {
             dataStore.data.first().let { preferences ->
                 editTextSlackWebhookUrl.setText(preferences[PreferencesKeys.SLACK_WEBHOOK_URL] ?: "")
                 editTextSmsMatchString.setText(preferences[PreferencesKeys.SMS_MATCH_STRING] ?: "OTP")
+                editTextDeviceName.setText(preferences[PreferencesKeys.DEVICE_NAME] ?: "")
                 editTextMonitoringWebhookUrl.setText(preferences[PreferencesKeys.MONITORING_WEBHOOK_URL] ?: "")
                 checkBoxEnabled.isChecked = preferences[PreferencesKeys.JUGAAD_ENABLED] ?: false
             }
@@ -82,6 +85,7 @@ class ConfigurationActivity: AppCompatActivity() {
     private fun testStatusUpdate() {
         val mainWebhookUrl = editTextSlackWebhookUrl.text.toString().trim()
         val monitoringWebhookUrl = editTextMonitoringWebhookUrl.text.toString().trim()
+        val deviceName = editTextDeviceName.text.toString().trim()
         
         // Validate that at least one webhook is configured
         if (mainWebhookUrl.isEmpty() && monitoringWebhookUrl.isEmpty()) {
@@ -111,7 +115,8 @@ class ConfigurationActivity: AppCompatActivity() {
                 // Send to main webhook if configured
                 if (mainWebhookUrl.isNotEmpty()) {
                     totalCount++
-                    if (sendTestMessage(mainWebhookUrl, "Testing Jugaad Status.")) {
+                    val mainMessage = if (deviceName.isNotEmpty()) "$deviceName: Testing Jugaad Status." else "Testing Jugaad Status."
+                    if (sendTestMessage(mainWebhookUrl, mainMessage)) {
                         successCount++
                     }
                 }
@@ -119,7 +124,8 @@ class ConfigurationActivity: AppCompatActivity() {
                 // Send to monitoring webhook if configured
                 if (monitoringWebhookUrl.isNotEmpty()) {
                     totalCount++
-                    if (sendTestMessage(monitoringWebhookUrl, "Jugaad bolta hai")) {
+                    val monitoringMessage = if (deviceName.isNotEmpty()) "$deviceName: Jugaad bolta hai" else "Jugaad bolta hai"
+                    if (sendTestMessage(monitoringWebhookUrl, monitoringMessage)) {
                         successCount++
                     }
                 }
@@ -174,17 +180,16 @@ class ConfigurationActivity: AppCompatActivity() {
     private fun saveConfiguration() {
         val webhookUrl = editTextSlackWebhookUrl.text.toString().trim()
         val smsMatchString = editTextSmsMatchString.text.toString().trim()
+        val deviceName = editTextDeviceName.text.toString().trim()
         val monitoringWebhookUrl = editTextMonitoringWebhookUrl.text.toString().trim()
         val isEnabled = checkBoxEnabled.isChecked
         
+        // Use default values for optional fields if they're empty
+        val finalSmsMatchString = if (smsMatchString.isEmpty()) "OTP" else smsMatchString
+        
         // Basic validation
         if (isEnabled && webhookUrl.isEmpty()) {
-            Toast.makeText(this, "Please enter a Slack webhook URL", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        if (isEnabled && smsMatchString.isEmpty()) {
-            Toast.makeText(this, "Please enter an SMS match string", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please enter a Slack webhook URL to enable Jugaad", Toast.LENGTH_SHORT).show()
             return
         }
         
@@ -203,7 +208,8 @@ class ConfigurationActivity: AppCompatActivity() {
             try {
                 dataStore.edit { preferences ->
                     preferences[PreferencesKeys.SLACK_WEBHOOK_URL] = webhookUrl
-                    preferences[PreferencesKeys.SMS_MATCH_STRING] = smsMatchString
+                    preferences[PreferencesKeys.SMS_MATCH_STRING] = finalSmsMatchString
+                    preferences[PreferencesKeys.DEVICE_NAME] = deviceName
                     preferences[PreferencesKeys.MONITORING_WEBHOOK_URL] = monitoringWebhookUrl
                     preferences[PreferencesKeys.JUGAAD_ENABLED] = isEnabled
                 }
@@ -214,7 +220,11 @@ class ConfigurationActivity: AppCompatActivity() {
                     Toast.makeText(this@ConfigurationActivity, "Configuration saved and daily status updates scheduled", Toast.LENGTH_SHORT).show()
                 } else {
                     StatusUpdateScheduler.cancelStatusUpdate(this@ConfigurationActivity)
-                    Toast.makeText(this@ConfigurationActivity, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
+                    if (isEnabled) {
+                        Toast.makeText(this@ConfigurationActivity, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@ConfigurationActivity, "Jugaad disabled - configuration saved", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 
                 finish()

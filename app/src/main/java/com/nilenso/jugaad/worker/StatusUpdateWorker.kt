@@ -21,7 +21,9 @@ class StatusUpdateWorker(appCtx: Context, workerParams: WorkerParameters): Corou
     override suspend fun doWork(): Result {
         Log.d("STATUSUPDATEWORKER", "Starting daily status update work")
 
-        val monitoringWebhookUrl = applicationContext.dataStore.data.first()[PreferencesKeys.MONITORING_WEBHOOK_URL]
+        val preferences = applicationContext.dataStore.data.first()
+        val monitoringWebhookUrl = preferences[PreferencesKeys.MONITORING_WEBHOOK_URL]
+        val deviceName = preferences[PreferencesKeys.DEVICE_NAME]?.takeIf { it.isNotBlank() } ?: ""
 
         // If no monitoring webhook is configured, just return success (no-op)
         if (monitoringWebhookUrl.isNullOrEmpty()) {
@@ -46,7 +48,15 @@ class StatusUpdateWorker(appCtx: Context, workerParams: WorkerParameters): Corou
                     .build()
 
                 val api = retrofit.create(JugaadWebService::class.java)
-                val statusMessage = "Jugaad bolta hai"
+                
+                // Prefix status message with device name if configured
+                val baseStatusMessage = "Jugaad bolta hai"
+                val statusMessage = if (deviceName.isNotEmpty()) {
+                    "$deviceName: $baseStatusMessage"
+                } else {
+                    baseStatusMessage
+                }
+                
                 val request = JugaadSendRequest(statusMessage)
                 val response = api.sendMessageAsync(monitoringWebhookUrl, request)
                 

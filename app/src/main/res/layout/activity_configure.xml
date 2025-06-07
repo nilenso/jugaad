@@ -72,23 +72,36 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
+                <!-- Device Name Section -->
+                <TextView
+                    android:id="@+id/textViewDeviceTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📱 Device Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/editTextDeviceName"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/edittext_background"
+                    android:inputType="text"
+                    android:hint="ex. Govind's Phone"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary_text"
+                    android:textColorHint="@color/secondary_text"
+                    android:layout_marginBottom="24dp" />
+
                 <!-- Slack Webhook Section -->
                 <TextView
                     android:id="@+id/textViewSlackTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🚀 Slack Integration"
+                    android:text="🚀 Slack Webhook URL"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Slack Webhook URL"
-                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
                     android:layout_marginBottom="8dp" />
@@ -110,18 +123,8 @@
                     android:id="@+id/textViewSmsTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📱 SMS Filtering"
+                    android:text="📱 SMS Match String"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SMS Match String"
-                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
                     android:layout_marginBottom="8dp" />
@@ -138,50 +141,7 @@
                     android:textColorHint="@color/secondary_text"
                     android:layout_marginBottom="24dp" />
 
-                <!-- Monitoring Section -->
-                <TextView
-                    android:id="@+id/textViewMonitoringTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="📊 Status Monitoring (Optional)"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:id="@+id/textViewMonitoringWebhook"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Monitoring Webhook URL"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="8dp" />
-
-                <EditText
-                    android:id="@+id/editTextMonitoringWebhookUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/edittext_background"
-                    android:inputType="textUri"
-                    android:hint="https://hooks.slack.com/services/... (Optional)"
-                    android:textSize="14sp"
-                    android:textColor="@color/primary_text"
-                    android:textColorHint="@color/secondary_text"
-                    android:layout_marginBottom="24dp" />
-
                 <!-- Enable/Disable Section -->
-                <TextView
-                    android:id="@+id/textViewStatusTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="⚙️ Service Status"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="16dp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -222,6 +182,38 @@
                         android:buttonTint="@color/nilenso_pink" />
 
                 </LinearLayout>
+
+                <!-- Line Separator -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/secondary_text"
+                    android:alpha="0.2"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Monitoring Section -->
+                <TextView
+                    android:id="@+id/textViewMonitoringTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Status Monitoring Webhook"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/editTextMonitoringWebhookUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/edittext_background"
+                    android:inputType="textUri"
+                    android:hint="https://hooks.slack.com/services/... (Optional)"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary_text"
+                    android:textColorHint="@color/secondary_text"
+                    android:layout_marginBottom="24dp" />
 
                 <!-- Save Button -->
                 <Button
@@ -271,7 +263,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Test both webhooks with sample messages"
+                    android:text="Send a test message to slack webhooks."
                     android:textSize="14sp"
                     android:textColor="@color/secondary_text"
                     android:layout_marginBottom="16dp" />
@@ -323,7 +315,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Jugaad monitors incoming SMS messages and forwards matching messages to your configured Slack channel."
+                    android:text="Jugaad monitors incoming SMS messages and forwards matching messages to your configured Slack channel.\n\nSMS messages containing the match string will be forwarded to Slack. For example, if you set it to 'OTP', only messages containing the word 'OTP' will be sent."
                     android:textSize="14sp"
                     android:textColor="@color/secondary_text"
                     android:lineSpacingExtra="2dp" />

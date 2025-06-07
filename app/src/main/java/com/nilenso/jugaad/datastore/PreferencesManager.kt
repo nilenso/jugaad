@@ -15,4 +15,5 @@ object PreferencesKeys {
     val SMS_MATCH_STRING = stringPreferencesKey("sms_match_string")
     val JUGAAD_ENABLED = booleanPreferencesKey("jugaad_enabled")
     val MONITORING_WEBHOOK_URL = stringPreferencesKey("monitoring_webhook_url")
+    val DEVICE_NAME = stringPreferencesKey("device_name")
 } 

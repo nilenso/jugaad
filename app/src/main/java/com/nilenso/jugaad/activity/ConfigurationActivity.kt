@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -123,9 +124,9 @@ class ConfigurationActivity: AppCompatActivity() {
     private fun updateSmsDescription() {
         val matchString = editTextSmsMatchString.text.toString().trim()
         if (matchString.isEmpty()) {
-            textViewSmsDescription.text = "Messages containing the match string will be forwarded"
+            textViewSmsDescription.text = "Forwarding all SMSes"
         } else {
-            textViewSmsDescription.text = "Messages containing '$matchString' will be forwarded"
+            textViewSmsDescription.text = "Forwarding SMS containing '$matchString'"
         }
     }
     

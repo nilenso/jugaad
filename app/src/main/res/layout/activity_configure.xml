@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/imageViewLogoConfig"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
@@ -81,7 +81,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="12dp" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -91,7 +91,6 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
-                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp" />
 
                 <EditText
@@ -104,7 +103,7 @@
                     android:textSize="14sp"
                     android:textColor="@color/primary_text"
                     android:textColorHint="@color/secondary_text"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="24dp" />
 
                 <!-- SMS Filter Section -->
                 <TextView
@@ -115,8 +114,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="12dp" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -126,7 +124,6 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
-                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp" />
 
                 <EditText
@@ -139,7 +136,40 @@
                     android:textSize="14sp"
                     android:textColor="@color/primary_text"
                     android:textColorHint="@color/secondary_text"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Monitoring Section -->
+                <TextView
+                    android:id="@+id/textViewMonitoringTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Status Monitoring (Optional)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/textViewMonitoringWebhook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Monitoring Webhook URL"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/editTextMonitoringWebhookUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/edittext_background"
+                    android:inputType="textUri"
+                    android:hint="https://hooks.slack.com/services/... (Optional)"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary_text"
+                    android:textColorHint="@color/secondary_text"
+                    android:layout_marginBottom="24dp" />
 
                 <!-- Enable/Disable Section -->
                 <TextView
@@ -150,7 +180,6 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
-                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp" />
 
                 <LinearLayout
@@ -159,7 +188,7 @@
                     android:orientation="horizontal"
                     android:background="@drawable/rounded_corner_background"
                     android:padding="16dp"
-                    android:layout_marginBottom="24dp">
+                    android:layout_marginBottom="20dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -204,7 +233,59 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:elevation="4dp" />
+                    android:elevation="4dp"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Test Controls Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTestControls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/surface_light"
+            app:layout_constraintTop_toBottomOf="@id/cardConfigForm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🧪 Testing"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Test both webhooks with sample messages"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Test Status Update Button -->
+                <Button
+                    android:id="@+id/buttonTestStatusUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/button_background"
+                    android:text="🧪 Test Status Update"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -215,11 +296,11 @@
             android:id="@+id/cardInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="2dp"
             app:cardBackgroundColor="@color/surface_light"
-            app:layout_constraintTop_toBottomOf="@id/cardConfigForm"
+            app:layout_constraintTop_toBottomOf="@id/cardTestControls"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">

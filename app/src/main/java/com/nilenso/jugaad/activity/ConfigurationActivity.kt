@@ -2,10 +2,13 @@ package com.nilenso.jugaad.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
@@ -41,8 +44,10 @@ class ConfigurationActivity: AppCompatActivity() {
     private lateinit var editTextDeviceName: EditText
     private lateinit var editTextMonitoringWebhookUrl: EditText
     private lateinit var checkBoxEnabled: CheckBox
-    private lateinit var buttonSave: Button
     private lateinit var buttonTestStatusUpdate: Button
+    private lateinit var textViewDisabledWarning: TextView
+    private lateinit var textViewSmsDescription: TextView
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,30 +59,149 @@ class ConfigurationActivity: AppCompatActivity() {
         editTextDeviceName = findViewById(R.id.editTextDeviceName)
         editTextMonitoringWebhookUrl = findViewById(R.id.editTextMonitoringWebhookUrl)
         checkBoxEnabled = findViewById(R.id.checkBoxEnabled)
-        buttonSave = findViewById(R.id.buttonSave)
         buttonTestStatusUpdate = findViewById(R.id.buttonTestStatusUpdate)
+        textViewDisabledWarning = findViewById(R.id.textViewDisabledWarning)
+        textViewSmsDescription = findViewById(R.id.textViewSmsDescription)
         
         // Load current configuration
         loadConfiguration()
         
-        // Set up button click listeners
-        buttonSave.setOnClickListener {
-            saveConfiguration()
+        // Set up checkbox listener to show/hide warning and auto-save
+        checkBoxEnabled.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("ConfigurationActivity", "Checkbox changed to: $isChecked")
+            updateDisabledWarningVisibility(isChecked)
+            
+            // Auto-save the enabled state immediately (but not during initial load)
+            if (!isLoading) {
+                lifecycleScope.launch {
+                    try {
+                        Log.d("ConfigurationActivity", "Auto-saving JUGAAD_ENABLED as: $isChecked")
+                        dataStore.edit { preferences ->
+                            preferences[PreferencesKeys.JUGAAD_ENABLED] = isChecked
+                        }
+                        updateStatusUpdateScheduling()
+                    } catch (e: Exception) {
+                        Log.e("ConfigurationActivity", "Failed to auto-save JUGAAD_ENABLED", e)
+                    }
+                }
+            }
         }
         
+        // Set up auto-save text watchers for all EditText fields
+        editTextSlackWebhookUrl.addTextChangedListener(createAutoSaveTextWatcher(PreferencesKeys.SLACK_WEBHOOK_URL))
+        editTextDeviceName.addTextChangedListener(createAutoSaveTextWatcher(PreferencesKeys.DEVICE_NAME))
+        editTextMonitoringWebhookUrl.addTextChangedListener(createAutoSaveTextWatcher(PreferencesKeys.MONITORING_WEBHOOK_URL))
+        
+        // Set up SMS match string text watcher for dynamic description and auto-save
+        editTextSmsMatchString.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateSmsDescription()
+                if (!isLoading) {
+                    autoSaveSmsMatchString()
+                }
+            }
+        })
+        
+        // Set up button click listeners
         buttonTestStatusUpdate.setOnClickListener {
             testStatusUpdate()
         }
     }
     
+    private fun updateDisabledWarningVisibility(isEnabled: Boolean) {
+        if (isEnabled) {
+            textViewDisabledWarning.visibility = android.view.View.GONE
+        } else {
+            textViewDisabledWarning.visibility = android.view.View.VISIBLE
+            textViewDisabledWarning.text = "⚠️ Messages will not be forwarded to Slack when disabled"
+            textViewDisabledWarning.setTextColor(resources.getColor(R.color.secondary_text, null))
+        }
+    }
+    
+    private fun updateSmsDescription() {
+        val matchString = editTextSmsMatchString.text.toString().trim()
+        if (matchString.isEmpty()) {
+            textViewSmsDescription.text = "Messages containing the match string will be forwarded"
+        } else {
+            textViewSmsDescription.text = "Messages containing '$matchString' will be forwarded"
+        }
+    }
+    
     private fun loadConfiguration() {
+        isLoading = true
         lifecycleScope.launch {
             dataStore.data.first().let { preferences ->
+                Log.d("ConfigurationActivity", "Loading configuration...")
+                
                 editTextSlackWebhookUrl.setText(preferences[PreferencesKeys.SLACK_WEBHOOK_URL] ?: "")
                 editTextSmsMatchString.setText(preferences[PreferencesKeys.SMS_MATCH_STRING] ?: "OTP")
                 editTextDeviceName.setText(preferences[PreferencesKeys.DEVICE_NAME] ?: "")
                 editTextMonitoringWebhookUrl.setText(preferences[PreferencesKeys.MONITORING_WEBHOOK_URL] ?: "")
-                checkBoxEnabled.isChecked = preferences[PreferencesKeys.JUGAAD_ENABLED] ?: false
+                
+                val isEnabled = preferences[PreferencesKeys.JUGAAD_ENABLED] ?: false
+                Log.d("ConfigurationActivity", "JUGAAD_ENABLED preference value: $isEnabled")
+                
+                checkBoxEnabled.isChecked = isEnabled
+                Log.d("ConfigurationActivity", "Checkbox set to: ${checkBoxEnabled.isChecked}")
+                
+                // Update warning visibility based on initial state
+                updateDisabledWarningVisibility(isEnabled)
+                
+                // Update SMS description based on initial value
+                updateSmsDescription()
+                
+                isLoading = false
+            }
+        }
+    }
+    
+    private fun createAutoSaveTextWatcher(key: Preferences.Key<String>): TextWatcher {
+        return object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (!isLoading) {
+                    autoSaveField(key, s.toString().trim())
+                }
+            }
+        }
+    }
+    
+    private fun autoSaveField(key: Preferences.Key<String>, value: String) {
+        lifecycleScope.launch {
+            try {
+                dataStore.edit { preferences ->
+                    preferences[key] = value
+                }
+                Log.d("ConfigurationActivity", "Auto-saved ${key.name}: $value")
+                
+                // Update status update scheduling when monitoring webhook changes
+                if (key == PreferencesKeys.MONITORING_WEBHOOK_URL) {
+                    updateStatusUpdateScheduling()
+                }
+            } catch (e: Exception) {
+                Log.e("ConfigurationActivity", "Failed to auto-save ${key.name}", e)
+            }
+        }
+    }
+    
+    private fun autoSaveSmsMatchString() {
+        val value = editTextSmsMatchString.text.toString().trim()
+        val finalValue = if (value.isEmpty()) "OTP" else value
+        autoSaveField(PreferencesKeys.SMS_MATCH_STRING, finalValue)
+    }
+    
+    private fun updateStatusUpdateScheduling() {
+        lifecycleScope.launch {
+            dataStore.data.first().let { preferences ->
+                val monitoringWebhookUrl = preferences[PreferencesKeys.MONITORING_WEBHOOK_URL] ?: ""
+                if (monitoringWebhookUrl.isNotEmpty()) {
+                    StatusUpdateScheduler.scheduleStatusUpdate(this@ConfigurationActivity)
+                } else {
+                    StatusUpdateScheduler.cancelStatusUpdate(this@ConfigurationActivity)
+                }
             }
         }
     }
@@ -173,63 +297,6 @@ class ConfigurationActivity: AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("ConfigurationActivity", "Failed to send test message to $webhookUrl", e)
                 false
-            }
-        }
-    }
-    
-    private fun saveConfiguration() {
-        val webhookUrl = editTextSlackWebhookUrl.text.toString().trim()
-        val smsMatchString = editTextSmsMatchString.text.toString().trim()
-        val deviceName = editTextDeviceName.text.toString().trim()
-        val monitoringWebhookUrl = editTextMonitoringWebhookUrl.text.toString().trim()
-        val isEnabled = checkBoxEnabled.isChecked
-        
-        // Use default values for optional fields if they're empty
-        val finalSmsMatchString = if (smsMatchString.isEmpty()) "OTP" else smsMatchString
-        
-        // Basic validation
-        if (isEnabled && webhookUrl.isEmpty()) {
-            Toast.makeText(this, "Please enter a Slack webhook URL to enable Jugaad", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        if (isEnabled && !webhookUrl.startsWith("https://hooks.slack.com/")) {
-            Toast.makeText(this, "Please enter a valid Slack webhook URL", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        // Validate monitoring webhook URL if provided
-        if (monitoringWebhookUrl.isNotEmpty() && !monitoringWebhookUrl.startsWith("https://hooks.slack.com/")) {
-            Toast.makeText(this, "Please enter a valid monitoring webhook URL or leave it empty", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        lifecycleScope.launch {
-            try {
-                dataStore.edit { preferences ->
-                    preferences[PreferencesKeys.SLACK_WEBHOOK_URL] = webhookUrl
-                    preferences[PreferencesKeys.SMS_MATCH_STRING] = finalSmsMatchString
-                    preferences[PreferencesKeys.DEVICE_NAME] = deviceName
-                    preferences[PreferencesKeys.MONITORING_WEBHOOK_URL] = monitoringWebhookUrl
-                    preferences[PreferencesKeys.JUGAAD_ENABLED] = isEnabled
-                }
-                
-                // Schedule or cancel status updates based on monitoring webhook configuration
-                if (monitoringWebhookUrl.isNotEmpty()) {
-                    StatusUpdateScheduler.scheduleStatusUpdate(this@ConfigurationActivity)
-                    Toast.makeText(this@ConfigurationActivity, "Configuration saved and daily status updates scheduled", Toast.LENGTH_SHORT).show()
-                } else {
-                    StatusUpdateScheduler.cancelStatusUpdate(this@ConfigurationActivity)
-                    if (isEnabled) {
-                        Toast.makeText(this@ConfigurationActivity, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@ConfigurationActivity, "Jugaad disabled - configuration saved", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                
-                finish()
-            } catch (e: Exception) {
-                Toast.makeText(this@ConfigurationActivity, "Failed to save configuration: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

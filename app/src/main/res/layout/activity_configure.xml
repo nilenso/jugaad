@@ -96,15 +96,30 @@
                     android:layout_marginBottom="24dp" />
 
                 <!-- Slack Webhook Section -->
-                <TextView
-                    android:id="@+id/textViewSlackTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🚀 Slack Webhook URL"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_slack"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="Slack" />
+
+                    <TextView
+                        android:id="@+id/textViewSlackTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Slack Webhook URL"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_text" />
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextSlackWebhookUrl"
@@ -123,7 +138,7 @@
                     android:id="@+id/textViewSmsTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📱 SMS Match String"
+                    android:text="🔍 SMS Match String"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
@@ -139,6 +154,15 @@
                     android:textSize="14sp"
                     android:textColor="@color/primary_text"
                     android:textColorHint="@color/secondary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/textViewSmsDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Messages containing 'OTP' will be forwarded"
+                    android:textSize="12sp"
+                    android:textColor="@color/secondary_text"
                     android:layout_marginBottom="24dp" />
 
                 <!-- Enable/Disable Section -->
@@ -148,7 +172,7 @@
                     android:orientation="horizontal"
                     android:background="@drawable/rounded_corner_background"
                     android:padding="16dp"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginBottom="8dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -183,6 +207,15 @@
 
                 </LinearLayout>
 
+                <!-- Warning message when disabled -->
+                <TextView
+                    android:id="@+id/textViewDisabledWarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="24dp" />
+
                 <!-- Line Separator -->
                 <View
                     android:layout_width="match_parent"
@@ -193,15 +226,30 @@
                     android:layout_marginBottom="24dp" />
 
                 <!-- Monitoring Section -->
-                <TextView
-                    android:id="@+id/textViewMonitoringTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📊 Status Monitoring Webhook"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_slack"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="Slack" />
+
+                    <TextView
+                        android:id="@+id/textViewMonitoringTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Status Monitoring Webhook"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_text" />
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextMonitoringWebhookUrl"
@@ -214,19 +262,6 @@
                     android:textColor="@color/primary_text"
                     android:textColorHint="@color/secondary_text"
                     android:layout_marginBottom="24dp" />
-
-                <!-- Save Button -->
-                <Button
-                    android:id="@+id/buttonSave"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/button_background"
-                    android:text="Save Configuration"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:elevation="4dp"
-                    android:layout_marginTop="8dp" />
 
             </LinearLayout>
 
@@ -274,9 +309,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/button_background"
-                    android:text="🧪 Test Status Update"
+                    android:text="Test Status Update"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -315,7 +350,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Jugaad monitors incoming SMS messages and forwards matching messages to your configured Slack channel.\n\nSMS messages containing the match string will be forwarded to Slack. For example, if you set it to 'OTP', only messages containing the word 'OTP' will be sent."
+                    android:text="Jugaad monitors incoming SMS messages and forwards matching messages to your configured Slack channel."
                     android:textSize="14sp"
                     android:textColor="@color/secondary_text"
                     android:lineSpacingExtra="2dp" />

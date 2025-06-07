@@ -7,7 +7,7 @@ An Android app that forwards SMS messages to Slack.
 1. Build and install: `./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk`. Install the APK on your device. 
 You can alternatively use Android Studio to run and build the app.
 
-2. Grant permissions when prompted
+2. Grant permissions when prompted.
 3. Configure: Device name, Slack webhook URLs, SMS match string (e.g. "OTP")
 
 **Optional**: The "Status Monitoring Webhook" sends periodic "heartbeat" messages to Slack to verify the app is running.

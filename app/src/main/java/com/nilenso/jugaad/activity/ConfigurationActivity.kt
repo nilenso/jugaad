@@ -112,11 +112,12 @@ class ConfigurationActivity: AppCompatActivity() {
     }
     
     private fun updateDisabledWarningVisibility(isEnabled: Boolean) {
+        textViewDisabledWarning.visibility = android.view.View.VISIBLE
         if (isEnabled) {
-            textViewDisabledWarning.visibility = android.view.View.GONE
+            textViewDisabledWarning.text = "✅ Forwarding enabled"
+            textViewDisabledWarning.setTextColor(resources.getColor(R.color.success_green, null))
         } else {
-            textViewDisabledWarning.visibility = android.view.View.VISIBLE
-            textViewDisabledWarning.text = "⚠️ Messages will not be forwarded to Slack when disabled"
+            textViewDisabledWarning.text = "⚠️ Forwarding disabled"
             textViewDisabledWarning.setTextColor(resources.getColor(R.color.secondary_text, null))
         }
     }

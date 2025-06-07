@@ -13,6 +13,10 @@
     <color name="nilenso_dark_pink">#E8357B</color>
     <color name="nilenso_light_pink">#FF5B9B</color>
     
+    <!-- Enhanced button colors for better visibility -->
+    <color name="button_primary">#FF1F5A</color>
+    <color name="button_primary_dark">#D41B4C</color>
+    
     <!-- Modern UI Colors -->
     <color name="background_light">#F8F9FA</color>
     <color name="surface_light">#FFFFFF</color>

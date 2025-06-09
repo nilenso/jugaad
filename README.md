@@ -2,29 +2,26 @@
 
 An Android app that forwards SMS messages to Slack.
 
-## Setup
+## Installation
 
-### Option 1: Download Pre-built APK (Recommended)
-1. Go to the [GitHub Actions](https://github.com/nilenso/jugaad/actions/workflows/build-release.yml?query=branch%3Amain) page (main branch builds)
-2. Click on the latest successful build
-3. Download the `jugaad-release-apk` artifact
-4. Install the APK on your device
+### Download Pre-built APK (Recommended)
+1. Download the `jugaad-release-apk` artifact from the latest successful [GitHub Actions](https://github.com/nilenso/jugaad/actions/workflows/build-release.yml?query=branch%3Amain) run.
+2. Install the APK on your device.
 
-### Option 2: Build Locally
-1. Build and install: `./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk`
-2. You can alternatively use Android Studio to run and build the app
-
-### Configuration
+### Configure
 1. Grant SMS permissions when prompted
 2. Configure: Device name, Slack webhook URLs, SMS match string (e.g. "OTP")
 
 **Optional**: The "Status Monitoring Webhook" sends periodic "heartbeat" messages to Slack to verify the app is running.
 
-## For Developers
+## Developing
+
+### Building Locally
+1. Build and install: `./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk`. You can also use Android Studio to run and build the app.
 
 ### Testing on a device emulator
 
-If you're running the app in an emulator, you can trigger SMSes to the device via telnet
+You can trigger SMSes to an emulator device via telnet for testing.
 ```bash
 telnet localhost 5554
 auth <token_from_~/.emulator_console_auth_token>

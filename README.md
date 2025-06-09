@@ -5,7 +5,7 @@ An Android app that forwards SMS messages to Slack.
 ## Installation
 
 ### Download Pre-built APK (Recommended)
-1. Download the latest `app-release.apk` from the [Releases page](https://github.com/nilenso/jugaad/releases) and install the app. (A new release is automatically created for every commit to the main branch)
+1. Download the latest `app-release.apk` from the [Releases page](https://github.com/nilenso/jugaad/releases) and install the app. (A new release is automatically created for every commit to the main branch). You might need to [disable play protect](https://support.google.com/googleplay/answer/2812853?hl=en).
 2. Grant SMS permissions when prompted. Configure the device name, webhook URLs etc.
 
 ## Developing

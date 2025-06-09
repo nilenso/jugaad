@@ -7,48 +7,19 @@
     android:background="@color/background_light"
     tools:context=".activity.MainActivity">
 
-    <!-- Company Logo -->
-    <ImageView
-        android:id="@+id/imageViewLogo"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:contentDescription="Nilenso Logo"
-        android:src="@drawable/nilenso_logo"
-        android:scaleType="fitCenter"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- App Title -->
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Jugaad"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary_text"
-        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- App Description -->
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="80dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="SMS to Slack forwarding"
         android:textSize="16sp"
         android:textColor="@color/secondary_text"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -107,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_background"
-                android:text="Configure Jugaad"
+                android:text="Configure"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -118,15 +89,17 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Footer -->
-    <TextView
-        android:id="@+id/textViewFooter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- Footer with Nilenso Logo -->
+    <ImageView
+        android:id="@+id/imageViewFooterLogo"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
         android:layout_marginBottom="24dp"
-        android:text="Built with ❤️ by nilenso"
-        android:textSize="12sp"
-        android:textColor="@color/secondary_text"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:contentDescription="Nilenso Logo"
+        android:src="@drawable/nilenso_logo"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

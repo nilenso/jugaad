@@ -5,17 +5,8 @@ An Android app that forwards SMS messages to Slack.
 ## Installation
 
 ### Download Pre-built APK (Recommended)
-1. Download the `jugaad-release-apk` artifact from the latest successful [GitHub Actions](https://github.com/nilenso/jugaad/actions/workflows/build-release.yml?query=branch%3Amain) run
-2. Install the APK on your device
-
-### Configure
-1. Grant SMS permissions when prompted
-2. Configure the following:
-   - Device name
-   - Slack webhook URLs
-   - SMS match string (e.g. "OTP")
-
-**Optional:** The "Status Monitoring Webhook" sends periodic "heartbeat" messages to Slack to verify the app is running.
+1. Download the latest `app-release.apk` from the [Releases page](https://github.com/nilenso/jugaad/releases) and install the app. (A new release is automatically created for every commit to the main branch)
+2. Grant SMS permissions when prompted. Configure the device name, webhook URLs etc.
 
 ## Developing
 
@@ -25,7 +16,7 @@ Build and install to emulator:
 ./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
-You can also use Android Studio to run and build the app.
+You can also use Android Studio to build and run the app.
 
 ### Signing Apps Locally
 To build signed release APKs locally:
@@ -38,7 +29,7 @@ To build signed release APKs locally:
 
 The keystore (`jugaad-release-key.jks`) will remain in your project directory for local builds.
 
-### Testing on Device Emulator
+### Testing SMS on Device Emulator
 You can trigger SMSes to an emulator device via telnet for testing:
 ```bash
 telnet localhost 5554
@@ -49,4 +40,4 @@ sms send 9987987986 "Your OTP is 123456"
 ### Setting up GitHub Actions for Signed Builds (One-time)
 1. Run `./setup-signing.sh` to generate signing keys and get GitHub secrets
 2. Add the 4 secrets to your GitHub repo: Settings → Secrets and variables → Actions
-3. Push your code - GitHub Actions will automatically build signed APKs
+3. Push your code - GitHub Actions will automatically build signed APKs and create public releases

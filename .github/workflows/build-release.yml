@@ -38,9 +38,28 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: ./gradlew assembleRelease
       
-    - name: Upload APK
+    # Upload as artifact (for backup/debugging)
+    - name: Upload APK as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: jugaad-release-apk
         path: app/build/outputs/apk/release/app-release.apk
-        retention-days: 30 
+        retention-days: 30
+        
+    # Create public release on every push to main
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: build-${{ github.sha }}
+        name: "Build ${{ github.sha }}"
+        body: |
+          Automatic release from commit ${{ github.sha }}
+          
+          **Commit:** ${{ github.event.head_commit.message }}
+          **Author:** ${{ github.event.head_commit.author.name }}
+        files: app/build/outputs/apk/release/app-release.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

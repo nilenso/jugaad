@@ -250,7 +250,7 @@ class ConfigurationActivity: AppCompatActivity() {
                 // Send to monitoring webhook if configured
                 if (monitoringWebhookUrl.isNotEmpty()) {
                     totalCount++
-                    val monitoringMessage = if (deviceName.isNotEmpty()) "$deviceName: Jugaad bolta hai" else "Jugaad bolta hai"
+                    val monitoringMessage = if (deviceName.isNotEmpty()) "$deviceName: Jugaad SMS forwarder is operational" else "Jugaad SMS forwarder is operational"
                     if (sendTestMessage(monitoringWebhookUrl, monitoringMessage)) {
                         successCount++
                     }

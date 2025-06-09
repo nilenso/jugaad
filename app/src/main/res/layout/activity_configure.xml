@@ -337,7 +337,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Jugaad monitors incoming SMS messages and forwards matching messages to your configured Slack channel.\n\nThe monitoring webhook can be used to receive a liveness update everyday at 9am IST."
+                    android:text="The app monitors incoming SMS messages and forwards matching messages to your configured Slack channel.\n\nThe monitoring webhook can be used to receive a liveness update everyday at 9am IST."
                     android:textSize="14sp"
                     android:textColor="@color/secondary_text"
                     android:lineSpacingExtra="2dp" />

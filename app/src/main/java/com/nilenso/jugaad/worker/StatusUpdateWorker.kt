@@ -49,8 +49,27 @@ class StatusUpdateWorker(appCtx: Context, workerParams: WorkerParameters): Corou
 
                 val api = retrofit.create(JugaadWebService::class.java)
                 
-                // Prefix status message with device name if configured
-                val baseStatusMessage = "Jugaad bolta hai"
+                // List of varied status messages - pick one randomly each day
+                val statusMessages = listOf(
+                    "Jugaad SMS forwarder is operational",
+                    "Jugaad SMS forwarder is running smoothly", 
+                    "Jugaad SMS forwarder is online and ready",
+                    "Jugaad SMS forwarder is active and monitoring",
+                    "Jugaad SMS forwarder is monitoring incoming messages",
+                    "Jugaad SMS forwarder is ready to forward messages",
+                    "Jugaad SMS forwarder is listening for SMS messages",
+                    "Jugaad SMS forwarder is watching for messages",
+                    "Jugaad SMS forwarder is doing its thing",
+                    "Jugaad SMS forwarder is on duty",
+                    "Jugaad SMS forwarder is on the job",
+                    "Jugaad SMS forwarder is standing by",
+                    "Jugaad SMS forwarder is running",
+                    "Jugaad SMS forwarder is active",
+                    "Jugaad SMS forwarder reporting in"
+                )
+                
+                // Pick a random message each day
+                val baseStatusMessage = statusMessages.random()
                 val statusMessage = if (deviceName.isNotEmpty()) {
                     "$deviceName: $baseStatusMessage"
                 } else {

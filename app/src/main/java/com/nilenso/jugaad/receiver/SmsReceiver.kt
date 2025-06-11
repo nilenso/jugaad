@@ -12,7 +12,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.nilenso.jugaad.worker.JugaadSendWorker
 import com.nilenso.jugaad.datastore.dataStore
@@ -96,7 +95,6 @@ class SmsReceiver : BroadcastReceiver() {
                                 Log.d(TAG, "✅ SMS matches pattern '$smsMatchString', sending to webhook")
                                 
                                 val wrk = OneTimeWorkRequestBuilder<JugaadSendWorker>()
-                                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                                     .setInputData(Data.Builder()
                                         .putString("JUGAAD_MSG", msgBody)
                                         .putString("SENDER", sender ?: "Unknown")

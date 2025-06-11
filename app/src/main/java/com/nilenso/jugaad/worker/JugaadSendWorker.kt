@@ -1,11 +1,17 @@
 package com.nilenso.jugaad.worker
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.work.ForegroundInfo
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.nilenso.jugaad.R
 import com.nilenso.jugaad.api.JugaadSendRequest
 import com.nilenso.jugaad.api.JugaadWebService
 import com.nilenso.jugaad.datastore.dataStore
@@ -19,6 +25,46 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class JugaadSendWorker(appCtx: Context, workerParams: WorkerParameters): Worker(appCtx, workerParams) {
+    
+    companion object {
+        private const val NOTIFICATION_ID = 1
+        private const val CHANNEL_ID = "jugaad_send_channel"
+    }
+    
+    override fun getForegroundInfo(): ForegroundInfo {
+        return createForegroundInfo()
+    }
+    
+    private fun createForegroundInfo(): ForegroundInfo {
+        createNotificationChannel()
+        
+        val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setContentTitle("Jugaad SMS Forwarder")
+            .setContentText("Sending SMS to Slack...")
+            .setSmallIcon(R.drawable.ic_slack)
+            .setOngoing(true)
+            .build()
+        
+        return ForegroundInfo(NOTIFICATION_ID, notification)
+    }
+    
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            
+            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    "SMS Forwarding",
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    description = "Notifications for SMS forwarding operations"
+                    setShowBadge(false)
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+        }
+    }
     
     override fun doWork(): Result {
 

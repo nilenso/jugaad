@@ -1,6 +1,5 @@
 package com.nilenso.jugaad.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,23 +10,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.nilenso.jugaad.R
 import com.nilenso.jugaad.api.JugaadSendRequest
 import com.nilenso.jugaad.api.JugaadWebService
 import com.nilenso.jugaad.datastore.dataStore
 import com.nilenso.jugaad.datastore.PreferencesKeys
 import com.nilenso.jugaad.utils.StatusUpdateScheduler
-import com.nilenso.jugaad.worker.StatusUpdateWorker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers

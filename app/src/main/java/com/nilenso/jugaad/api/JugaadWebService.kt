@@ -11,7 +11,7 @@ import retrofit2.http.Url
 interface JugaadWebService {
     @Headers("Content-Type: application/json;charset=UTF-8")
     @POST
-    fun sendMessage(@Url url: String, @Body request: JugaadSendRequest): Call<JugaadResponse>
+    fun sendMessage(@Url url: String, @Body request: JugaadSendRequest): Call<ResponseBody>
     
     @Headers("Content-Type: application/json;charset=UTF-8")
     @POST

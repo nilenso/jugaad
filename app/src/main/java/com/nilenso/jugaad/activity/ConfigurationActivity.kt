@@ -10,6 +10,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
@@ -26,6 +27,7 @@ import com.nilenso.jugaad.api.JugaadSendRequest
 import com.nilenso.jugaad.api.JugaadWebService
 import com.nilenso.jugaad.datastore.dataStore
 import com.nilenso.jugaad.datastore.PreferencesKeys
+import com.nilenso.jugaad.utils.OemDiagnostics
 import com.nilenso.jugaad.utils.StatusUpdateScheduler
 import com.nilenso.jugaad.worker.StatusUpdateWorker
 import kotlinx.coroutines.flow.first
@@ -46,6 +48,7 @@ class ConfigurationActivity: AppCompatActivity() {
     private lateinit var editTextMonitoringWebhookUrl: EditText
     private lateinit var checkBoxEnabled: CheckBox
     private lateinit var buttonTestStatusUpdate: Button
+    private lateinit var buttonDiagnostics: Button
     private lateinit var textViewDisabledWarning: TextView
     private lateinit var textViewSmsDescription: TextView
     private var isLoading = false
@@ -61,6 +64,7 @@ class ConfigurationActivity: AppCompatActivity() {
         editTextMonitoringWebhookUrl = findViewById(R.id.editTextMonitoringWebhookUrl)
         checkBoxEnabled = findViewById(R.id.checkBoxEnabled)
         buttonTestStatusUpdate = findViewById(R.id.buttonTestStatusUpdate)
+        buttonDiagnostics = findViewById(R.id.buttonDiagnostics)
         textViewDisabledWarning = findViewById(R.id.textViewDisabledWarning)
         textViewSmsDescription = findViewById(R.id.textViewSmsDescription)
         
@@ -108,6 +112,10 @@ class ConfigurationActivity: AppCompatActivity() {
         // Set up button click listeners
         buttonTestStatusUpdate.setOnClickListener {
             testStatusUpdate()
+        }
+        
+        buttonDiagnostics.setOnClickListener {
+            showDiagnostics()
         }
     }
     
@@ -301,5 +309,21 @@ class ConfigurationActivity: AppCompatActivity() {
                 false
             }
         }
+    }
+    
+    private fun showDiagnostics() {
+        val diagnosticReport = OemDiagnostics.generateDiagnosticReport(this)
+        
+        AlertDialog.Builder(this)
+            .setTitle("📱 SMS Troubleshooting")
+            .setMessage(diagnosticReport)
+            .setPositiveButton("Copy to Clipboard") { _, _ ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Jugaad Diagnostics", diagnosticReport)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, "Diagnostic report copied to clipboard", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Close", null)
+            .show()
     }
 }

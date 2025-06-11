@@ -296,6 +296,18 @@
                     android:text="TEST WEBHOOK CONNECTIONS"
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Diagnostics Button -->
+                <Button
+                    android:id="@+id/buttonDiagnostics"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/button_secondary_background"
+                    android:text="🔧 SMS TROUBLESHOOTING"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

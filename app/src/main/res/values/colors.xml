@@ -20,6 +20,7 @@
     <!-- Modern UI Colors -->
     <color name="background_light">#F8F9FA</color>
     <color name="surface_light">#FFFFFF</color>
+    <color name="surface_medium">#F1F3F4</color>
     <color name="primary_text">#212529</color>
     <color name="secondary_text">#6C757D</color>
     <color name="border_color">#E9ECEF</color>

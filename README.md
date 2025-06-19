@@ -43,3 +43,7 @@ sms send 9987987986 "Your OTP is 123456"
 1. Run `./setup-signing.sh` to generate signing keys and get GitHub secrets
 2. Add the 4 secrets to your GitHub repo: Settings → Secrets and variables → Actions
 3. Push your code - GitHub Actions will automatically build signed APKs and create public releases
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

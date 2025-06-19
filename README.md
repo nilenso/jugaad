@@ -1,12 +1,14 @@
 # Jugaad
 
-An Android app that forwards SMS messages to Slack.
+An Android app that forwards SMS messages to Slack. 
+
+This app relies on the restricted `READ_SMS` permission and needs several workarounds on most devices. For internal use.
 
 ## Installation
-
-### Download Pre-built APK (Recommended)
 1. Download the latest `app-release.apk` from the [Releases page](https://github.com/nilenso/jugaad/releases) and install the app. (A new release is automatically created for every commit to the main branch). You might need to [disable play protect](https://support.google.com/googleplay/answer/2812853?hl=en).
-2. Grant SMS permissions when prompted. Configure the device name, webhook URLs etc.
+2. [Allow restricted settings](https://support.google.com/android/answer/12623953?hl=en) for Jugaad.
+3. [Allow developer options](https://developer.android.com/studio/debug/dev-options).
+5. Grant SMS permissions when prompted. Configure the device name, webhook URLs etc.
 
 ## Developing
 
